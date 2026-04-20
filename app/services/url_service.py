@@ -53,13 +53,19 @@ def update_url_by_shortkey(db: Session, shortkey: str, data: dict):
     return new_url
 
 
-def delete_url_by_shortkey(db: Session, shortkey: str) -> str:
+def delete_url_by_shortkey(db: Session, shortkey: str, user_id: int) -> str:
 
     url = url_repository.get_by_shortkey(db=db, shortkey=shortkey)
 
     if not url:
         raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN, detail="URL not found"
+            status_code=status.HTTP_404_NOT_FOUND, detail="URL not found"
+        )
+
+    if url.owner_id != user_id:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Not authorized to delete this URL",
         )
 
     url_repository.delete_by_shortkey(db=db, shortkey=shortkey)

@@ -7,6 +7,7 @@ from app.services import auth_service
 from app.core.database import get_db
 from app.schema.user_schema import UserCreate, UserResponse
 from app.services import user_service
+from app.schema.auth_schema import RefreshRequest
 
 router = APIRouter(prefix="/auth", tags=["Auth"])
 
