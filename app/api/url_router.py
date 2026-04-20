@@ -68,4 +68,6 @@ def delete_url_by_shortkey(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
-    url_service.delete_url_by_shortkey(db=db, shortkey=shortkey, user_id=current_user)
+    url_service.delete_url_by_shortkey(
+        db=db, shortkey=shortkey, user_id=current_user.id
+    )

@@ -21,12 +21,12 @@ def get_by_shortkey(db: Session, shortkey: str, user_id: int):
 
     if not url:
         raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN, detail="URL not found"
+            status_code=status.HTTP_404_NOT_FOUND, detail="URL not found"
         )
 
     if url.owner_id != user_id:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
+            status_code=status.HTTP_403_FORBIDDEN,
             detail="User not have access to this Url or url does not exists",
         )
 
