@@ -29,16 +29,11 @@ def login(payload: LoginRequest, db: Session = Depends(get_db)):
     }
 
 
-@router.post("/refresh", response_model=Token)
-def refresh(token: str, db: Session = Depends(get_db)):
-    new_access_token = auth_service.refresh_access_token(db, token)
-    return {
-        "access_token": new_access_token,
-        "refresh_token": token,
-        "token_type": "bearer",
-    }
+@router.post("/refresh")
+def refresh(payload: RefreshRequest, db: Session = Depends(get_db)):
+    token = payload.refresh_token
 
 
 @router.post("/logout", status_code=status.HTTP_204_NO_CONTENT)
-def logout(token: str, db: Session = Depends(get_db)):
-    auth_service.logout_user(db, token)
+def logout(payload: RefreshRequest, db: Session = Depends(get_db)):
+    auth_service.logout_user(db, payload.refresh_token)

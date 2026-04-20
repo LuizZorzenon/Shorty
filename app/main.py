@@ -28,6 +28,3 @@ app.include_router(redirect_router)
 
 
 Base.metadata.create_all(bind=engine)
-
-
-engine = create_engine("postgresql://admin:admin@127.0.0.1:5432/shorty")

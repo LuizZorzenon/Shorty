@@ -1,12 +1,6 @@
-const API_URL = import.meta.env.VITE_API_URL
+import type { Url } from '../types/Url.js'
 
-export type Url = {
-    id: number
-    original_url: string
-    short_key: string
-    clicks: number
-    is_active: boolean
-}
+const API_URL = import.meta.env.VITE_API_URL
 
 function getAuthHeader() {
     const token = localStorage.getItem('access_token')

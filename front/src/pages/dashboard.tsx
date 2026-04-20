@@ -1,17 +1,11 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { getUrls, createUrl, deleteUrl, updateUrl } from '../services/api.js'
-import Navbar from '../components/Navbar.js'
-import UrlForm from '../components/Urlform.js'
-import UrlTable from '../components/Urltable.js'
+import { getUrls, createUrl, deleteUrl, updateUrl } from '../services/api'
+import Navbar from '../components/Navbar'
+import UrlForm from '../components/Urlform'
+import UrlTable from '../components/Urltable'
+import type { Url } from '../types/Url'
 
-type Url = {
-    id: number
-    original_url: string
-    short_key: string
-    clicks: number
-    is_active: boolean
-}
 
 type UrlTableProps = {
     urls: Url[],
@@ -55,13 +49,12 @@ function Dashboard() {
         }
     }
     async function handleUpdate(shortkey: string, newUrl: string, isActive: boolean): Promise<void> {
-        console.log('handleUpdate:', shortkey, newUrl, isActive)
         try {
             await updateUrl(shortkey, newUrl, isActive)
             fetchUrls()
         } catch (err) {
-            console.log('erro:', err)
-            setError('Erro ao atualizar URL')
+            const msg = err instanceof Error ? err.message : 'Erro ao atualizar URL'
+            setError(msg)
         }
     }
 

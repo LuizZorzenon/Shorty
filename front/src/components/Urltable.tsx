@@ -1,5 +1,5 @@
-import UrlRow from './Urlrow.js'
-import UrlCard from './Urlcard.js'
+import UrlRow from './Urlrow'
+import UrlCard from './Urlcard'
 
 type Url = {
     id: number

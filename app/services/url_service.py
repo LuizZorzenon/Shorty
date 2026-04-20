@@ -34,17 +34,7 @@ def get_by_shortkey(db: Session, shortkey: str, user_id: int):
 
 
 def get_all_urls(db: Session, user_id: int):
-
-    url = url_repository.get_by_user(db=db, user_id=user_id)
-
-    if url == []:
-        pass
-    elif not url:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="This user not have urls"
-        )
-
-    return url
+    return url_repository.get_by_user(db=db, user_id=user_id)
 
 
 def update_url_by_shortkey(db: Session, shortkey: str, data: dict):

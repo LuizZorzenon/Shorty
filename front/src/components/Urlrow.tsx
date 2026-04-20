@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import type { Url } from '../types/Url.js'
+import type { Url } from '../types/Url'
 
 
 type UrlRowProps = {

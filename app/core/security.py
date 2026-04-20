@@ -9,10 +9,6 @@ from passlib.context import CryptContext
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 
-print("SETTINGS:", settings)
-print("HAS ATTR:", hasattr(settings, "ACCESS_TOKEN_EXPIRE_MINUTES"))
-
-
 def hash_password(password: str) -> str:
     return pwd_context.hash(password)
 
