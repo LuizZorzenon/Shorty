@@ -3,7 +3,7 @@
 ![Python](https://img.shields.io/badge/Python-3.12-blue)
 ![FastAPI](https://img.shields.io/badge/FastAPI-Backend-green)
 ![React](https://img.shields.io/badge/React-19-blue)
-![Tests](https://img.shields.io/badge/Tests-Pytest-success)
+![Coverage](https://img.shields.io/badge/Coverage-99%25-brightgreen)
 ![Docker](https://img.shields.io/badge/Docker-Compose-blue)
 
 Encurtador de URLs fullstack com autenticação JWT, painel de gerenciamento e redirecionamento automático.
@@ -61,7 +61,8 @@ Encurtador de URLs fullstack com autenticação JWT, painel de gerenciamento e r
 
 ## ✅ Qualidade
 
-* Testes automatizados com Pytest
+* 34 testes automatizados com Pytest
+* Cobertura de 99%
 * Fixtures reutilizáveis
 * Banco isolado para testes
 * Arquitetura em camadas
@@ -200,19 +201,20 @@ VITE_API_URL=http://localhost:8000
 Execute todos os testes:
 
 ```bash
-pytest
+pytest tests/
 ```
 
-Cobertura atual:
+Cobertura atual: **99% (34 testes)**
 
-* autenticação
-* autorização
-* refresh token
-* token expirado
-* ownership
-* CRUD de URLs
-* redirects
-* click tracking
+Cenários cobertos:
+
+* Autenticação e autorização
+* Refresh token e logout
+* Token expirado, inválido e sem campos obrigatórios
+* Ownership e isolamento entre usuários
+* CRUD completo de URLs
+* Redirecionamento e URLs desabilitadas
+* Click tracking
 
 ---
 
@@ -232,8 +234,13 @@ Shorty/
 │
 ├── tests/
 │   ├── fixtures/
+│   │   ├── db_fixtures.py
+│   │   ├── auth_fixtures.py
+│   │   └── url_fixtures.py
 │   ├── test_auth.py
 │   ├── test_url.py
+│   ├── test_health.py
+│   ├── test_redirect.py
 │   └── conftest.py
 │
 ├── front/
@@ -259,6 +266,7 @@ Swagger disponível em:
 
 | Método | Rota               | Descrição                           | Auth |
 | ------ | ------------------ | ----------------------------------- | ---- |
+| GET    | `/health`          | Health check                        | —    |
 | POST   | `/auth/register`   | Cadastro de usuário                 | —    |
 | POST   | `/auth/login`      | Login                               | —    |
 | POST   | `/auth/refresh`    | Renovação do access token           | —    |
