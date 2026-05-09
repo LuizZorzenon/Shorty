@@ -1,44 +1,53 @@
 # ✂ Shorty
 
+![Python](https://img.shields.io/badge/Python-3.12-blue)
+![FastAPI](https://img.shields.io/badge/FastAPI-Backend-green)
+![React](https://img.shields.io/badge/React-19-blue)
+![Tests](https://img.shields.io/badge/Tests-Pytest-success)
+![Docker](https://img.shields.io/badge/Docker-Compose-blue)
+
 Encurtador de URLs fullstack com autenticação JWT, painel de gerenciamento e redirecionamento automático.
 
-## Stack
+---
 
-### Backend
+# 🚀 Stack
+
+## Backend
 
 * Python 3.12
 * FastAPI
 * SQLAlchemy
 * PostgreSQL
-* JWT Authentication (Access + Refresh Token)
+* JWT Authentication (Bearer Token)
 * Pytest
+* Pydantic v2
 
-### Frontend
+## Frontend
 
 * React 19
 * TypeScript
 * Tailwind CSS v4
 * Vite
 
-### Infra
+## Infra
 
 * Docker
 * Docker Compose
 
 ---
 
-## Funcionalidades
+# ✨ Funcionalidades
 
-### Autenticação
+## 🔐 Autenticação
 
 * Cadastro e login de usuários
 * JWT Authentication
 * Access Token + Refresh Token
 * Logout com revogação de token
-* Expiração automática de tokens
+* Validação e expiração automática de JWTs
 * Rotas protegidas com autenticação
 
-### URLs
+## 🔗 URLs
 
 * Criação de URLs encurtadas
 * Geração automática de short keys
@@ -50,7 +59,7 @@ Encurtador de URLs fullstack com autenticação JWT, painel de gerenciamento e r
 * Contador de cliques por URL
 * Isolamento por usuário (ownership)
 
-### Qualidade
+## ✅ Qualidade
 
 * Testes automatizados com Pytest
 * Fixtures reutilizáveis
@@ -60,7 +69,7 @@ Encurtador de URLs fullstack com autenticação JWT, painel de gerenciamento e r
 
 ---
 
-## Arquitetura
+# 🧱 Arquitetura
 
 O backend segue arquitetura em camadas:
 
@@ -72,22 +81,35 @@ Separando:
 
 * regras de negócio
 * acesso ao banco
-* validações
 * autenticação
+* validações
 * serialização
+* persistência
 
 ---
 
-## Pré-requisitos
+# 📸 Preview
+
+## Login
+
+<img src="./docs/login.png" />
+
+## Dashboard
+
+<img src="./docs/dashboard.png" />
+
+---
+
+# 📦 Pré-requisitos
 
 * Docker
 * Docker Compose
 
 ---
 
-## Como rodar
+# ▶️ Como rodar
 
-### Docker (recomendado)
+## 🐳 Docker (recomendado)
 
 Clone o projeto:
 
@@ -116,27 +138,29 @@ Acesse:
 
 ---
 
-## Desenvolvimento local
+# 💻 Desenvolvimento local
 
-### Backend
+## Backend
+
+Crie o ambiente virtual:
 
 ```bash
 python -m venv venv
 ```
 
-Windows:
+### Windows
 
 ```bash
 venv\Scripts\activate
 ```
 
-Linux/macOS:
+### Linux/macOS
 
 ```bash
 source venv/bin/activate
 ```
 
-Instale dependências:
+Instale as dependências:
 
 ```bash
 pip install -r requirements.txt
@@ -167,7 +191,7 @@ uvicorn app.main:app --reload
 
 ---
 
-### Frontend
+## Frontend
 
 ```bash
 cd front
@@ -175,7 +199,7 @@ npm install
 npm run dev
 ```
 
-Crie o `.env`:
+Crie o `.env` em `front/`:
 
 ```env
 VITE_API_URL=http://localhost:8000
@@ -183,7 +207,7 @@ VITE_API_URL=http://localhost:8000
 
 ---
 
-## Testes
+# 🧪 Testes
 
 Execute todos os testes:
 
@@ -204,7 +228,7 @@ Cobertura atual:
 
 ---
 
-## Estrutura do projeto
+# 📁 Estrutura do projeto
 
 ```txt
 Shorty/
@@ -227,6 +251,9 @@ Shorty/
 ├── front/
 │   └── src/
 │
+├── docker/
+│   └── init.sql
+│
 ├── docker-compose.yml
 ├── Dockerfile
 └── requirements.txt
@@ -234,7 +261,7 @@ Shorty/
 
 ---
 
-## API
+# 📚 API
 
 Swagger disponível em:
 
@@ -242,16 +269,29 @@ Swagger disponível em:
 /docs
 ```
 
-| Método | Rota             | Descrição                           | Auth |
-| ------ | ---------------- | ----------------------------------- | ---- |
-| POST   | /auth/register   | Cadastro de usuário                 | —    |
-| POST   | /auth/login      | Login                               | —    |
-| POST   | /auth/refresh    | Renovação do access token           | —    |
-| POST   | /auth/logout     | Logout e revogação do refresh token | ✓    |
-| GET    | /users/me        | Usuário autenticado                 | ✓    |
-| GET    | /urls/           | Lista URLs do usuário               | ✓    |
-| POST   | /urls/           | Cria URL encurtada                  | ✓    |
-| GET    | /urls/{shortkey} | Busca URL                           | ✓    |
-| PATCH  | /urls/{shortkey} | Atualiza URL                        | ✓    |
-| DELETE | /urls/{shortkey} | Remove URL                          | ✓    |
-| GET    | /{short_key}     | Redirect para URL original          | —    |
+| Método | Rota               | Descrição                           | Auth |
+| ------ | ------------------ | ----------------------------------- | ---- |
+| POST   | `/auth/register`   | Cadastro de usuário                 | —    |
+| POST   | `/auth/login`      | Login                               | —    |
+| POST   | `/auth/refresh`    | Renovação do access token           | —    |
+| POST   | `/auth/logout`     | Logout e revogação do refresh token | ✓    |
+| GET    | `/users/me`        | Usuário autenticado                 | ✓    |
+| GET    | `/urls/`           | Lista URLs do usuário               | ✓    |
+| POST   | `/urls/`           | Cria URL encurtada                  | ✓    |
+| GET    | `/urls/{shortkey}` | Busca URL                           | ✓    |
+| PATCH  | `/urls/{shortkey}` | Atualiza URL                        | ✓    |
+| DELETE | `/urls/{shortkey}` | Remove URL                          | ✓    |
+| GET    | `/{short_key}`     | Redirect para URL original          | —    |
+
+---
+
+# 🛣️ Roadmap
+
+* [ ] Redis cache
+* [ ] Kafka analytics
+* [ ] QRCode generation
+* [ ] Rate limiting
+* [ ] CI/CD pipeline
+* [ ] URL expiration
+* [ ] Observability
+* [ ] Background workers
