@@ -9,7 +9,7 @@ def create_short_url(db: Session, original_url: str, user_id: int):
 
     return url_repository.create(
         db=db,
-        original_url=original_url,
+        original_url=str(original_url),
         short_key=short_key,
         owner_id=user_id,
     )
@@ -43,11 +43,19 @@ def update_url_by_shortkey(db: Session, shortkey: str, data: dict):
 
     if not url:
         raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN, detail="URL not found"
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="URL not found",
         )
 
+    update_data = data.model_dump(exclude_unset=True)
+
+    if "original_url" in update_data:
+        update_data["original_url"] = str(update_data["original_url"])
+
     new_url = url_repository.update_url_by_shortkey(
-        db=db, shortkey=shortkey, data=data.model_dump(exclude_unset=True)
+        db=db,
+        shortkey=shortkey,
+        data=update_data,
     )
 
     return new_url

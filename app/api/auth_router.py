@@ -30,9 +30,15 @@ def login(payload: LoginRequest, db: Session = Depends(get_db)):
     }
 
 
-@router.post("/refresh")
+@router.post("/refresh", response_model=Token)
 def refresh(payload: RefreshRequest, db: Session = Depends(get_db)):
-    token = payload.refresh_token
+    access_token = auth_service.refresh_access_token(db, payload.refresh_token)
+
+    return {
+        "access_token": access_token,
+        "refresh_token": payload.refresh_token,
+        "token_type": "bearer",
+    }
 
 
 @router.post("/logout", status_code=status.HTTP_204_NO_CONTENT)

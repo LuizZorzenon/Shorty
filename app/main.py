@@ -13,6 +13,12 @@ from app.models import user, url
 
 app = FastAPI(title="Shorty", version="1.0.0", description="Encurtador de url!")
 
+
+@app.get("/health")
+def health():
+    return {"status": "ok"}
+
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost:5173"],
