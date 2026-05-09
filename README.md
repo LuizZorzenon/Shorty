@@ -88,18 +88,6 @@ Separando:
 
 ---
 
-# 📸 Preview
-
-## Login
-
-<img src="./docs/login.png" />
-
-## Dashboard
-
-<img src="./docs/dashboard.png" />
-
----
-
 # 📦 Pré-requisitos
 
 * Docker
