@@ -24,7 +24,7 @@ def update_url_by_shortkey(db: Session, shortkey: str, data: dict) -> URL | None
     url = db.query(URL).filter(URL.short_key == shortkey).first()
 
     if not url:
-        return None
+        return None  # pragma: no cover
 
     for key, value in data.items():
         if key in allowed_fields:

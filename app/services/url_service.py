@@ -38,27 +38,16 @@ def get_all_urls(db: Session, user_id: int):
 
 
 def update_url_by_shortkey(db: Session, shortkey: str, data: dict):
-
-    url = url_repository.get_by_shortkey(db=db, shortkey=shortkey)
-
-    if not url:
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="URL not found",
-        )
-
     update_data = data.model_dump(exclude_unset=True)
 
     if "original_url" in update_data:
         update_data["original_url"] = str(update_data["original_url"])
 
-    new_url = url_repository.update_url_by_shortkey(
+    return url_repository.update_url_by_shortkey(
         db=db,
         shortkey=shortkey,
         data=update_data,
     )
-
-    return new_url
 
 
 def delete_url_by_shortkey(db: Session, shortkey: str, user_id: int) -> str:

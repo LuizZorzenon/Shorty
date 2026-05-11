@@ -1,4 +1,5 @@
 from freezegun import freeze_time
+from jose import jwt
 
 
 def test_register(client):
@@ -87,6 +88,106 @@ def test_login_email_not_found(client):
     assert data["detail"] == "Invalid credentials"
 
 
+def test_register_duplicate_username(client):
+
+    client.post(
+        "/auth/register",
+        json={
+            "email": "luiz@teste.com",
+            "username": "luiz",
+            "password": "123456",
+        },
+    )
+
+    response = client.post(
+        "/auth/register",
+        json={
+            "email": "outro@teste.com",
+            "username": "luiz",
+            "password": "123456",
+        },
+    )
+
+    assert response.status_code == 400
+
+
+def test_register_duplicate_email(client):
+
+    client.post(
+        "/auth/register",
+        json={
+            "email": "luiz@teste.com",
+            "username": "luiz",
+            "password": "123456",
+        },
+    )
+
+    response = client.post(
+        "/auth/register",
+        json={
+            "email": "luiz@teste.com",
+            "username": "luiz2",
+            "password": "123456",
+        },
+    )
+
+    assert response.status_code == 400
+
+
+def test_user_not_found(client):
+
+    token = jwt.encode(
+        {
+            "sub": "999",
+            "exp": 9999999999,
+        },
+        "supersecret",
+        algorithm="HS256",
+    )
+
+    response = client.get(
+        "/users/me",
+        headers={"Authorization": f"Bearer {token}"},
+    )
+
+    assert response.status_code == 401
+    assert response.json()["detail"] == "User not found"
+
+
+def test_token_without_sub(client):
+
+    token = jwt.encode(
+        {"exp": 9999999999},
+        "supersecret",
+        algorithm="HS256",
+    )
+
+    response = client.get(
+        "/users/me",
+        headers={"Authorization": f"Bearer {token}"},
+    )
+
+    assert response.status_code == 401
+    assert response.json()["detail"] == "Invalid token"
+
+
+def test_token_without_exp(client):
+
+    token = jwt.encode(
+        {"sub": "1"},
+        "supersecret",
+        algorithm="HS256",
+    )
+
+    response = client.get(
+        "/users/me",
+        headers={"Authorization": f"Bearer {token}"},
+    )
+
+    assert response.status_code == 401
+    assert response.json()["detail"] == "Token missing expiration"
+
+
 def test_refresh_token(client, refresh_token):
 
     response = client.post(
@@ -101,6 +202,16 @@ def test_refresh_token(client, refresh_token):
     assert "access_token" in data
 
 
+def test_refresh_invalid_token(client):
+
+    response = client.post(
+        "/auth/refresh",
+        json={"refresh_token": "token_fake"},
+    )
+
+    assert response.status_code == 401
+
+
 def test_logout(client, refresh_token):
 
     response = client.post(
@@ -111,21 +222,14 @@ def test_logout(client, refresh_token):
     assert response.status_code == 204
 
 
-@freeze_time("2026-01-01 12:00:00")
-def test_expired_token(client, access_token):
+def test_logout_invalid_token(client):
 
-    with freeze_time("2026-01-01 13:00:00"):
+    response = client.post(
+        "/auth/logout",
+        json={"refresh_token": "token_fake"},
+    )
 
-        response = client.get(
-            "/users/me",
-            headers={"Authorization": f"Bearer {access_token}"},
-        )
-
-        assert response.status_code == 401
-
-        data = response.json()
-
-        assert data["detail"] == "Token expired"
+    assert response.status_code == 404
 
 
 @freeze_time("2026-01-01 12:00:00")

@@ -26,15 +26,10 @@ def test_list_urls(client, auth_headers, created_url):
     data = response.json()
 
     assert len(data) == 1
-
     assert data[0]["original_url"].startswith("https://google.com")
 
 
-def test_get_url_by_shortkey(
-    client,
-    auth_headers,
-    created_url,
-):
+def test_get_url_by_shortkey(client, auth_headers, created_url):
 
     response = client.get(
         f"/urls/{created_url['short_key']}",
@@ -73,11 +68,7 @@ def test_delete_url(client, auth_headers, created_url):
     assert response.status_code == 200
 
 
-def test_get_deleted_url(
-    client,
-    auth_headers,
-    created_url,
-):
+def test_get_deleted_url(client, auth_headers, created_url):
 
     client.delete(
         f"/urls/{created_url['short_key']}",
@@ -103,14 +94,11 @@ def test_redirect_increments_clicks(client, created_url, auth_headers):
 
     data = response.json()
 
+    assert response.status_code == 200
     assert data["clicks"] == 1
 
 
-def test_redirect_disabled_url(
-    client,
-    auth_headers,
-    created_url,
-):
+def test_redirect_disabled_url(client, auth_headers, created_url):
 
     client.patch(
         f"/urls/{created_url['short_key']}",
@@ -123,11 +111,7 @@ def test_redirect_disabled_url(
     assert response.status_code == 410
 
 
-def test_cannot_access_other_user_url(
-    client,
-    created_url,
-    second_user_headers,
-):
+def test_cannot_access_other_user_url(client, created_url, second_user_headers):
 
     response = client.get(
         f"/urls/{created_url['short_key']}",
@@ -137,11 +121,7 @@ def test_cannot_access_other_user_url(
     assert response.status_code == 403
 
 
-def test_cannot_update_other_user_url(
-    client,
-    created_url,
-    second_user_headers,
-):
+def test_cannot_update_other_user_url(client, created_url, second_user_headers):
 
     response = client.patch(
         f"/urls/{created_url['short_key']}",
@@ -152,11 +132,7 @@ def test_cannot_update_other_user_url(
     assert response.status_code == 403
 
 
-def test_cannot_delete_other_user_url(
-    client,
-    created_url,
-    second_user_headers,
-):
+def test_cannot_delete_other_user_url(client, created_url, second_user_headers):
 
     response = client.delete(
         f"/urls/{created_url['short_key']}",
@@ -164,3 +140,25 @@ def test_cannot_delete_other_user_url(
     )
 
     assert response.status_code == 403
+
+
+def test_update_url_not_found(client, auth_headers):
+
+    response = client.patch(
+        "/urls/url_fake",
+        json={"original_url": "https://youtube.com"},
+        headers=auth_headers,
+    )
+
+    assert response.status_code == 404
+    assert response.json()["detail"] == "URL not found"
+
+
+def test_delete_url_not_found(client, auth_headers):
+
+    response = client.delete(
+        "/urls/url_fake",
+        headers=auth_headers,
+    )
+
+    assert response.status_code == 404
